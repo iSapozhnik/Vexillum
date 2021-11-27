@@ -1,27 +1,36 @@
 import Foundation
 
-protocol FeatureStore {
+public protocol FeatureStoreProvider {
     func featureState(forKey key: String) -> FeatureState
     func setFeatureState(_ featureState: FeatureState, forKey key: String)
 }
 
-final class UserDefaultsFeatureStore: FeatureStore {
+public enum FeatureStore {
+    public static let userDefaults = UserDefaultsFeatureStore()
+    public static let inMemory = InMemoryFeatureStore()
+}
+
+public final class UserDefaultsFeatureStore: FeatureStoreProvider {
     private let userDefaults = UserDefaults.standard
     
-    func featureState(forKey key: FeatureKey) -> FeatureState {
+    public init() {}
+    
+    public func featureState(forKey key: FeatureKey) -> FeatureState {
         let featureStateIntegerValue = userDefaults.integer(forKey: key)
         guard let featureState = FeatureState(rawValue: featureStateIntegerValue) else { return .default }
         return featureState
     }
     
-    func setFeatureState(_ featureState: FeatureState, forKey key: FeatureKey) {
+    public func setFeatureState(_ featureState: FeatureState, forKey key: FeatureKey) {
         userDefaults.set(featureState.rawValue, forKey: key)
     }
 }
 
-final class InMemoryFeatureStore: FeatureStore {
+public final class InMemoryFeatureStore: FeatureStoreProvider {
     private var cache: [FeatureKey: FeatureState] = [:]
     
-    func featureState(forKey key: FeatureKey) -> FeatureState { cache[key] ?? .default }
-    func setFeatureState(_ featureState: FeatureState, forKey key: String) { cache[key] = featureState }
+    public init() {}
+    
+    public func featureState(forKey key: FeatureKey) -> FeatureState { cache[key] ?? .default }
+    public func setFeatureState(_ featureState: FeatureState, forKey key: String) { cache[key] = featureState }
 }

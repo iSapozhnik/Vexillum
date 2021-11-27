@@ -7,7 +7,26 @@ final class FeatureContainerTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        container = FeatureContainer(featureStore: InMemoryFeatureStore())
+        container = try! FeatureContainer(featureStore: InMemoryFeatureStore())
+    }
+    
+    func test_whenPassingThroughConstructor() throws {
+        // Arrange
+        container = try FeatureContainer(features: [
+            Feature(key: .featureA), Feature(key: .featureB)
+        ], featureStore: InMemoryFeatureStore())
+        
+        // Act
+        // Assert
+        let retrievedFeatures = [
+            try! container.featureForKey(.featureA),
+            try! container.featureForKey(.featureB)
+        ]
+        
+        // Assert
+        XCTAssertEqual(retrievedFeatures.count, 2)
+        XCTAssertEqual(retrievedFeatures[0].key, .featureA)
+        XCTAssertEqual(retrievedFeatures[1].key, .featureB)
     }
     
     func test_whenAddingFeatureWithoutKey() throws {
@@ -40,6 +59,42 @@ final class FeatureContainerTests: XCTestCase {
         
         // Assert
         XCTAssertTrue(try container.addFeature(feature))
+    }
+    
+    func test_whenRetrievingValyeViaSubscript() throws {
+        // Arrange
+        let feature = Feature(key: .appKey, defaultState: true)
+        
+        // Act
+        try! container.addFeature(feature)
+        
+        // Assert
+        XCTAssertTrue(container[.appKey])
+    }
+    
+    func test_whenStateChangedAndRetrievingValyeViaSubscript() throws {
+        // Arrange
+        let feature = Feature(key: .appKey, defaultState: true)
+        
+        // Act
+        try! container.addFeature(feature)
+        feature.state = .off
+        
+        // Assert
+        XCTAssertFalse(container[.appKey])
+    }
+    
+    func test_whenStateChangedAndDefaultedRetrievingValyeViaSubscript() throws {
+        // Arrange
+        let feature = Feature(key: .appKey, defaultState: true)
+        
+        // Act
+        try! container.addFeature(feature)
+        feature.state = .off
+        feature.state = .default
+        
+        // Assert
+        XCTAssertTrue(container[.appKey])
     }
     
     func test_whenRetrieveingOverridenState() throws {
