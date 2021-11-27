@@ -7,14 +7,14 @@ final class FeatureContainerTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
-        container = try! FeatureContainer(featureStore: InMemoryFeatureStore())
+        container = try! FeatureContainer(featureStoreProvider: InMemoryFeatureStore())
     }
     
     func test_whenPassingThroughConstructor() throws {
         // Arrange
         container = try FeatureContainer(features: [
             Feature(key: .featureA), Feature(key: .featureB)
-        ], featureStore: InMemoryFeatureStore())
+        ], featureStoreProvider: InMemoryFeatureStore())
         
         // Act
         // Assert
