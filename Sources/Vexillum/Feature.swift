@@ -1,5 +1,7 @@
+import Foundation
+
 /// Any of the states except `default` means that the feature has been overriden
-enum FeatureState {
+enum FeatureState: Int {
     case on
     case off
     case `default`
@@ -16,12 +18,12 @@ extension FeatureState: CustomDebugStringConvertible {
     var debugDescription: String { description }
 }
 
-protocol AnyFeature {
+protocol AnyFeature: NSObjectProtocol {
     var key: String { get }
     var title: String { get }
-    var description: String { get }
-    var defaultState: Bool { get }
+    var featureDescription: String { get }
     var enabled: Bool { get }
+    var defaultState: Bool { get }
     var state: FeatureState { get set }
 }
 
@@ -29,10 +31,12 @@ extension AnyFeature {
     var hash: Int { return self.key.hashValue }
 }
 
-class Feature: AnyFeature {
+typealias StateChange = (Feature) -> Void
+
+class Feature: NSObject, AnyFeature {
     let key: String
     let title: String
-    let description: String
+    let featureDescription: String
     
     var enabled: Bool {
         switch state {
@@ -44,7 +48,13 @@ class Feature: AnyFeature {
     
     var defaultState: Bool { _defaultState }
 
-    var state: FeatureState
+    var state: FeatureState {
+        didSet {
+            didChangeStateHandler?(self)
+        }
+    }
+    
+    var didChangeStateHandler: StateChange?
     
     private var _defaultState: Bool
     
@@ -52,11 +62,11 @@ class Feature: AnyFeature {
         key: String,
         defaultState: Bool = false,
         title: String? = nil,
-        description: String = ""
+        featureDescription: String = ""
     ) {
         self.key = key
         self.title = title ?? key
-        self.description = description
+        self.featureDescription = featureDescription
         _defaultState = defaultState
         state = .default
     }
