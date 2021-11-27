@@ -10,6 +10,10 @@ let package = Package(
         .library(
             name: "Vexillum",
             targets: ["Vexillum"]),
+        .library(
+            name: "FlagsmithFeatureFlagProvider",
+            targets: ["Vexillum", "FlagsmithFeatureFlagProvider"]
+        )
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -24,5 +28,10 @@ let package = Package(
         .testTarget(
             name: "VexillumTests",
             dependencies: ["Vexillum"]),
+        .target(
+            name: "FlagsmithFeatureFlagProvider",
+            dependencies: ["Vexillum"],
+            path: "FeatureFlagProviders/FlagsmithFeatureFlagProvider"
+        )
     ]
 )
