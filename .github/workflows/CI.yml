@@ -16,4 +16,4 @@ jobs:
     - name: Build
       run: xcodebuild -scheme Vexillum -destination generic/platform=iOS
     - name: Run tests
-      run: swift test -v
+      run: xcodebuild test -scheme Vexillum -destination generic/platform=iOS
