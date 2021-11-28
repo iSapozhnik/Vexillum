@@ -7,15 +7,9 @@
 import UIKit
 
 enum Haptic {
-    static func success() {
+    static func generate() {
         let generator = UINotificationFeedbackGenerator()
         generator.prepare()
         generator.notificationOccurred(.success)
-    }
-    
-    static func toggle() {
-        let generator = UIImpactFeedbackGenerator()
-        generator.prepare()
-        generator.impactOccurred()
     }
 }

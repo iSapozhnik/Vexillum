@@ -18,6 +18,7 @@
 		FF0D66F42752C96300F4FF1C /* Vexillum_Example_iOSUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0D66F32752C96300F4FF1C /* Vexillum_Example_iOSUITestsLaunchTests.swift */; };
 		FFF620842752E332006C8CC0 /* Vexillum in Frameworks */ = {isa = PBXBuildFile; productRef = FFF620832752E332006C8CC0 /* Vexillum */; };
 		FFF620862752E332006C8CC0 /* VexillumUI in Frameworks */ = {isa = PBXBuildFile; productRef = FFF620852752E332006C8CC0 /* VexillumUI */; };
+		FFF620882752E46B006C8CC0 /* FeatureFlagsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF620872752E46B006C8CC0 /* FeatureFlagsController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,7 @@
 		FF0D66F12752C96300F4FF1C /* Vexillum_Example_iOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vexillum_Example_iOSUITests.swift; sourceTree = "<group>"; };
 		FF0D66F32752C96300F4FF1C /* Vexillum_Example_iOSUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vexillum_Example_iOSUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		FFF620812752D2E4006C8CC0 /* Vexillum */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Vexillum; path = ..; sourceTree = "<group>"; };
+		FFF620872752E46B006C8CC0 /* FeatureFlagsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagsController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 				FF0D66D02752C96200F4FF1C /* AppDelegate.swift */,
 				FF0D66D22752C96200F4FF1C /* SceneDelegate.swift */,
 				FF0D66D42752C96200F4FF1C /* ViewController.swift */,
+				FFF620872752E46B006C8CC0 /* FeatureFlagsController.swift */,
 				FF0D66D62752C96200F4FF1C /* Main.storyboard */,
 				FF0D66D92752C96300F4FF1C /* Assets.xcassets */,
 				FF0D66DB2752C96300F4FF1C /* LaunchScreen.storyboard */,
@@ -284,6 +287,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FFF620882752E46B006C8CC0 /* FeatureFlagsController.swift in Sources */,
 				FF0D66D52752C96200F4FF1C /* ViewController.swift in Sources */,
 				FF0D66D12752C96200F4FF1C /* AppDelegate.swift in Sources */,
 				FF0D66D32752C96200F4FF1C /* SceneDelegate.swift in Sources */,

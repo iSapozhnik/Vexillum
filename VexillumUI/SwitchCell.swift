@@ -14,14 +14,12 @@ final class SwitchCell: UITableViewCell, Reusable {
         $0.setContentCompressionResistancePriority(.required, for: .vertical)
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.textColor = .label
-        $0.numberOfLines = 0
         $0.font = UIFont.systemFont(ofSize: 20)
     }
     private let descriptionLabel = withObject(UILabel()) {
         $0.setContentCompressionResistancePriority(.required, for: .vertical)
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.textColor = .secondaryLabel
-        $0.numberOfLines = 0
         $0.font = UIFont.systemFont(ofSize: 16)
     }
     private let stateLabel = withObject(UILabel()) {
@@ -64,10 +62,6 @@ final class SwitchCell: UITableViewCell, Reusable {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
-        super.setHighlighted(false, animated: false)
-    }
-    
     override func prepareForReuse() {
         super.prepareForReuse()
         
@@ -88,11 +82,10 @@ final class SwitchCell: UITableViewCell, Reusable {
         } else {
             feature.state = .on
         }
-        Haptic.toggle()
+        Haptic.generate()
         
         updateUI(withFeature: feature)
     }
-    
     
     private func updateUI(withFeature feature: Feature?) {
         guard let feature = feature else { return }
@@ -114,8 +107,8 @@ final class SwitchCell: UITableViewCell, Reusable {
         NSLayoutConstraint.activate([
             contentStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             contentStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            contentStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-            contentStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
+            contentStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            contentStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
         ])
         
         contentStackView.addArrangedSubview(switchControl)

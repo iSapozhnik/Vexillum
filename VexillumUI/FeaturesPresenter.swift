@@ -2,9 +2,7 @@ import Foundation
 import UIKit
 import Vexillum
 
-final class FeaturesPresenter: NSObject {
-    weak var viewController: UIViewController?
-    
+class FeaturesPresenter: NSObject {
     let features: [AnyFeature]
     
     init(withFeatures features: [AnyFeature]) {
@@ -30,15 +28,4 @@ extension FeaturesPresenter {
     func updateFeature(tableView: UITableView, indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .fade)
     }
-    
-    func reload() {
-        (viewController as? UITableViewController)?.tableView?.reloadSections(IndexSet(integer: 0), with: .fade)
-    }
 }
-
-extension FeaturesPresenter {
-    @objc func onDone(_ sender: Any?) {
-        viewController?.dismiss(animated: true)
-    }
-}
-
