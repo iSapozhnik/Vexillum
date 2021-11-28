@@ -1,10 +1,11 @@
 import Foundation
+import UIKit
 
 /// Any of the states except `default` means that the feature has been overriden
 public enum FeatureState: Int {
+    case `default`
     case on
     case off
-    case `default`
 }
 
 extension FeatureState: CustomDebugStringConvertible {
@@ -54,6 +55,17 @@ public class Feature: NSObject, AnyFeature {
         }
     }
     
+    public var color: UIColor {
+        switch (state, _defaultState) {
+        case (.on, true): return .systemOrange
+        case (.on, false): return .systemOrange
+        case (.off, true): return .systemOrange
+        case (.off, false): return .systemOrange
+        case (.default, true): return .systemGreen
+        case (.default, false): return .systemGray3
+        }
+    }
+    
     var didChangeStateHandler: StateChange?
     
     private var _defaultState: Bool
@@ -76,17 +88,4 @@ public class Feature: NSObject, AnyFeature {
         _defaultState = newState
     }
     
-    //💛 - overriden
-    //🖤 - off
-    //💚 - on
-    var color: String {
-        switch (state, _defaultState) {
-        case (.on, true): return "💛"
-        case (.on, false): return "💛"
-        case (.off, true): return "💛"
-        case (.off, false): return "💛"
-        case (.default, true): return "💚"
-        case (.default, false): return "🖤"
-        }
-    }
 }

@@ -16,6 +16,9 @@
 		FF0D66E82752C96300F4FF1C /* Vexillum_Example_iOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0D66E72752C96300F4FF1C /* Vexillum_Example_iOSTests.swift */; };
 		FF0D66F22752C96300F4FF1C /* Vexillum_Example_iOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0D66F12752C96300F4FF1C /* Vexillum_Example_iOSUITests.swift */; };
 		FF0D66F42752C96300F4FF1C /* Vexillum_Example_iOSUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0D66F32752C96300F4FF1C /* Vexillum_Example_iOSUITestsLaunchTests.swift */; };
+		FFF620842752E332006C8CC0 /* Vexillum in Frameworks */ = {isa = PBXBuildFile; productRef = FFF620832752E332006C8CC0 /* Vexillum */; };
+		FFF620862752E332006C8CC0 /* VexillumUI in Frameworks */ = {isa = PBXBuildFile; productRef = FFF620852752E332006C8CC0 /* VexillumUI */; };
+		FFF620882752E46B006C8CC0 /* FeatureFlagsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF620872752E46B006C8CC0 /* FeatureFlagsController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +52,8 @@
 		FF0D66ED2752C96300F4FF1C /* Vexillum-Example-iOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Vexillum-Example-iOSUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF0D66F12752C96300F4FF1C /* Vexillum_Example_iOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vexillum_Example_iOSUITests.swift; sourceTree = "<group>"; };
 		FF0D66F32752C96300F4FF1C /* Vexillum_Example_iOSUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vexillum_Example_iOSUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		FFF620812752D2E4006C8CC0 /* Vexillum */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Vexillum; path = ..; sourceTree = "<group>"; };
+		FFF620872752E46B006C8CC0 /* FeatureFlagsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagsController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +61,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FFF620862752E332006C8CC0 /* VexillumUI in Frameworks */,
+				FFF620842752E332006C8CC0 /* Vexillum in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,10 +86,12 @@
 		FF0D66C42752C96200F4FF1C = {
 			isa = PBXGroup;
 			children = (
+				FFF620802752D2E4006C8CC0 /* Packages */,
 				FF0D66CF2752C96200F4FF1C /* Vexillum-Example-iOS */,
 				FF0D66E62752C96300F4FF1C /* Vexillum-Example-iOSTests */,
 				FF0D66F02752C96300F4FF1C /* Vexillum-Example-iOSUITests */,
 				FF0D66CE2752C96200F4FF1C /* Products */,
+				FFF620822752E332006C8CC0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -102,6 +111,7 @@
 				FF0D66D02752C96200F4FF1C /* AppDelegate.swift */,
 				FF0D66D22752C96200F4FF1C /* SceneDelegate.swift */,
 				FF0D66D42752C96200F4FF1C /* ViewController.swift */,
+				FFF620872752E46B006C8CC0 /* FeatureFlagsController.swift */,
 				FF0D66D62752C96200F4FF1C /* Main.storyboard */,
 				FF0D66D92752C96300F4FF1C /* Assets.xcassets */,
 				FF0D66DB2752C96300F4FF1C /* LaunchScreen.storyboard */,
@@ -127,6 +137,21 @@
 			path = "Vexillum-Example-iOSUITests";
 			sourceTree = "<group>";
 		};
+		FFF620802752D2E4006C8CC0 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				FFF620812752D2E4006C8CC0 /* Vexillum */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		FFF620822752E332006C8CC0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -143,6 +168,10 @@
 			dependencies = (
 			);
 			name = "Vexillum-Example-iOS";
+			packageProductDependencies = (
+				FFF620832752E332006C8CC0 /* Vexillum */,
+				FFF620852752E332006C8CC0 /* VexillumUI */,
+			);
 			productName = "Vexillum-Example-iOS";
 			productReference = FF0D66CD2752C96200F4FF1C /* Vexillum-Example-iOS.app */;
 			productType = "com.apple.product-type.application";
@@ -258,6 +287,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FFF620882752E46B006C8CC0 /* FeatureFlagsController.swift in Sources */,
 				FF0D66D52752C96200F4FF1C /* ViewController.swift in Sources */,
 				FF0D66D12752C96200F4FF1C /* AppDelegate.swift in Sources */,
 				FF0D66D32752C96200F4FF1C /* SceneDelegate.swift in Sources */,
@@ -624,6 +654,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FFF620832752E332006C8CC0 /* Vexillum */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Vexillum;
+		};
+		FFF620852752E332006C8CC0 /* VexillumUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = VexillumUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FF0D66C52752C96200F4FF1C /* Project object */;
 }

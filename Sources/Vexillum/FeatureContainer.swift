@@ -4,13 +4,15 @@ public typealias FeatureKey = String
 
 @dynamicMemberLookup
 public class FeatureContainer {
+    public var allFeatures: [AnyFeature] { features.map { $0.value }.sorted(by: \.key) }
+    
     private var features: [String: AnyFeature] = [:]
     private let featureStoreProvider: FeatureStoreProvider
     
-    public init(features: [AnyFeature]? = nil, featureStoreProvider: FeatureStoreProvider = UserDefaultsFeatureStore()) throws {
+    public init(features: [AnyFeature]? = nil, featureStoreProvider: FeatureStoreProvider = UserDefaultsFeatureStore()) {
         self.featureStoreProvider = featureStoreProvider
         if let features = features {
-            try addFeatures(features)
+            let _ = try? addFeatures(features)
         }
     }
 
@@ -75,6 +77,14 @@ public class FeatureContainer {
                 }
             }
             completion()
+        }
+    }
+}
+
+extension Sequence {
+    func sorted<T: Comparable>(by keyPath: KeyPath<Element, T>) -> [Element] {
+        return sorted { a, b in
+            return a[keyPath: keyPath] < b[keyPath: keyPath]
         }
     }
 }

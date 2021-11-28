@@ -5,14 +5,22 @@ import PackageDescription
 
 let package = Package(
     name: "Vexillum",
+    platforms: [
+        .iOS(.v13),
+    ],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "Vexillum",
-            targets: ["Vexillum"]),
+            targets: ["Vexillum"]
+        ),
         .library(
             name: "FlagsmithFeatureFlagProvider",
             targets: ["Vexillum", "FlagsmithFeatureFlagProvider"]
+        ),
+        .library(
+            name: "VexillumUI",
+            targets: ["Vexillum", "VexillumUI"]
         )
     ],
     dependencies: [
@@ -32,6 +40,11 @@ let package = Package(
             name: "FlagsmithFeatureFlagProvider",
             dependencies: ["Vexillum"],
             path: "FeatureFlagProviders/FlagsmithFeatureFlagProvider"
+        ),
+        .target(
+            name: "VexillumUI",
+            dependencies: ["Vexillum"],
+            path: "VexillumUI/"
         )
     ]
 )
