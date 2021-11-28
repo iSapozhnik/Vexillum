@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import Vexillum
 
-class FeaturesInteractor: NSObject {
+final class FeaturesInteractor: NSObject {
 
     let presenter: FeaturesPresenter
 
@@ -12,11 +12,17 @@ class FeaturesInteractor: NSObject {
 }
 
 extension FeaturesInteractor: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-        false
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard indexPath.row <= presenter.features.count,
+            let feature = presenter.features[indexPath.row] as? Feature
+            else { return }
+        
+        feature.state = feature.enabled ? .off : .on
+        presenter.updateFeature(tableView: tableView, indexPath: indexPath)
+        Haptic.toggle()
     }
     
-    open func tableView(_ tableView: UITableView,
+    func tableView(_ tableView: UITableView,
                         trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath
         ) -> UISwipeActionsConfiguration? {
 
@@ -43,9 +49,18 @@ extension FeaturesInteractor: UITableViewDelegate {
                       indexPath: IndexPath,
                       completion: (Bool) -> Void) {
 
-        Haptic.generate()
+        Haptic.success()
         feature.state = state
         completion(true)
         presenter.updateFeature(tableView: tableView, indexPath: indexPath)
+    }
+}
+
+extension FeaturesInteractor {
+    func resetAllFeatures(_ sender: Any?) {
+        presenter.features.forEach {
+            $0.state = .default
+        }
+        presenter.reload()
     }
 }
