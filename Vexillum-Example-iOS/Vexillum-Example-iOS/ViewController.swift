@@ -18,18 +18,17 @@ class ViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        let featureFlagsController = FeatureFlagsController()
-        featureFlagsController.modalPresentationStyle = .automatic
-        let navController = UINavigationController(rootViewController: featureFlagsController)
-        self.present(navController, animated: true)
+        showFeatureController()
     }
 
     @IBAction func showFeatureFlags(_ sender: Any) {
-        let featureFlagsController = FeatureFlagsController()
-        featureFlagsController.modalPresentationStyle = .automatic
-        let navController = UINavigationController(rootViewController: featureFlagsController)
-        self.present(navController, animated: true)
+        showFeatureController()
     }
     
+    private func showFeatureController() {
+        let featureFlagsController = FeatureFlagsController()
+        let navController = UINavigationController(rootViewController: featureFlagsController)
+        present(navController, animated: true)
+    }
 }
 
