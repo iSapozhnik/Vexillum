@@ -12,7 +12,7 @@ extension Reusable {
     }
 }
 
-@objc open class FeaturesTableViewController: UITableViewController {
+final class FeaturesTableViewController: UITableViewController {
     let presenter: FeaturesPresenter
     let interactor: FeaturesInteractor
 
@@ -23,15 +23,22 @@ extension Reusable {
         interactor = FeaturesInteractor(withPresenter: presenter)
 
         super.init(style: UITableView.Style.plain)
+        presenter.viewController = self
+
     }
 
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override open func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
+        title = "Features"
+        
+        navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .done, target: self, action: #selector(onDone(_:)))
+        navigationItem.leftBarButtonItem = .init(title: "Reset all", style: .plain, target: self, action: #selector(onReset(_:)))
+        
         tableView.register(SwitchCell.self, forCellReuseIdentifier: SwitchCell.reuseIdentifier)
         tableView.estimatedRowHeight = UITableView.automaticDimension
         tableView.dataSource = presenter
@@ -39,4 +46,12 @@ extension Reusable {
     }
 }
 
-
+extension FeaturesTableViewController {
+    @objc func onDone(_ sender: Any?) {
+        presenter.onDone(sender)
+    }
+    
+    @objc func onReset(_ sender: Any?) {
+        interactor.resetAllFeatures(sender)
+    }
+}

@@ -9,11 +9,34 @@ import UIKit
 import Vexillum
 import VexillumUI
 
+extension FeatureKey {
+    static let appFilter = "app_filter"
+    static let backgroundColor = "background_color"
+    static let showRating = "show_rating"
+    static let someOther = "sone_other"
+}
+
 class ViewController: UIViewController {
 
+    private static let features = [
+        Feature(key: .showRating, defaultState: true),
+        Feature(key: .backgroundColor, defaultState: false, title: "App background color"),
+        Feature(key: .appFilter, defaultState: true, title: "App filters", featureDescription: "Enabling filter by applications."),
+        Feature(key: .someOther, defaultState: true, title: "Some Other cool feature", featureDescription: "Some other cool feature which requires restarting the app."),
+    ]
+    
+    private var featureContainer: FeatureContainer!
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        featureContainer = FeatureContainer(features: Self.features, featureStoreProvider: FeatureStore.userDefaults)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        
+        view.backgroundColor = featureContainer[.backgroundColor] ? .systemOrange : .white
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -26,8 +49,7 @@ class ViewController: UIViewController {
     }
     
     private func showFeatureController() {
-        let featureFlagsController = FeatureFlagsController()
-        let navController = UINavigationController(rootViewController: featureFlagsController)
+        let navController = FeaturesNavigationController(withFeatureContainer: featureContainer)
         present(navController, animated: true)
     }
 }
