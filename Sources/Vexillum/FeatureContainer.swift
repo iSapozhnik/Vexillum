@@ -8,6 +8,7 @@ public class FeatureContainer {
     
     private var features: [String: AnyFeature] = [:]
     private let featureStoreProvider: FeatureStoreProvider
+    private let queue = DispatchQueue(label: "com.heavylightapps.vexillum")
     
     public init(features: [AnyFeature]? = nil, featureStoreProvider: FeatureStoreProvider = UserDefaultsFeatureStore()) {
         self.featureStoreProvider = featureStoreProvider
@@ -19,20 +20,25 @@ public class FeatureContainer {
     // MARK: - Adding features
     @discardableResult
     public func addFeature(_ feature: AnyFeature) throws -> Bool {
-        guard !feature.key.isEmpty else { throw FeatureContainerError.featureKeyIsEmpty }
-        guard features[feature.key] == nil else { throw FeatureContainerError.featureAlreadyExists(feature.key) }
-        
-        feature.state = featureStoreProvider.featureState(forKey: feature.key)
-        features[feature.key] = feature
-        
-        if let feature = feature as? Feature {
-            feature.didChangeStateHandler = { [weak self] updatedFeature in
-                guard let self = self else { return }
-                self.featureStoreProvider.setFeatureState(updatedFeature.state, forKey: updatedFeature.key)
+        try queue.sync {
+            guard !feature.key.isEmpty else { throw FeatureContainerError.featureKeyIsEmpty }
+            guard features[feature.key] == nil else { throw FeatureContainerError.featureAlreadyExists(feature.key) }
+            
+            if let featureAttributes = featureStoreProvider.featureAttributes(forKey: feature.key) {
+                feature.state = featureAttributes.state
+                (feature as? Feature)?.updateDefaultState(to: featureAttributes.defaultValue)
             }
+            features[feature.key] = feature
+            
+            if let feature = feature as? Feature {
+                feature.didChangeStateHandler = { [weak self] updatedFeature in
+                    guard let self = self else { return }
+                    self.featureStoreProvider.setAttributes(.init(state: updatedFeature.state, defaultValue: feature.defaultState), forKey: updatedFeature.key)
+                }
+            }
+            
+            return true
         }
-        
-        return true
     }
     
     @discardableResult
@@ -42,22 +48,30 @@ public class FeatureContainer {
     
     // MARK: - Removing features
     public func removeFeature(_ feature: Feature) {
-        guard let feature = features[feature.key] else { return }
-        features[feature.key] = nil
+        queue.sync {
+            guard let feature = features[feature.key] else { return }
+            features[feature.key] = nil
+        }
     }
     
     // MARK: - Retrieving features and enabled values
     public func featureForKey(_ key: FeatureKey) throws -> Feature {
-        guard let feature = features[key] as? Feature else { throw FeatureContainerError.noFeatureFound(key) }
-        return feature
+        try queue.sync {
+            guard let feature = features[key] as? Feature else { throw FeatureContainerError.noFeatureFound(key) }
+            return feature
+        }
     }
     
     private func optionalFeatureForKey(_ key: FeatureKey) -> Feature? {
-        features[key] as? Feature
+        queue.sync {
+            features[key] as? Feature
+        }
     }
     
     subscript(dynamicMember member: String) -> Feature? {
-        try? featureForKey(member)
+        queue.sync {
+            try? featureForKey(member)
+        }
     }
     
     public subscript(key: FeatureKey) -> Bool {
@@ -74,6 +88,7 @@ public class FeatureContainer {
             featuresMap.forEach {
                 if let feature = self.optionalFeatureForKey($0.key) {
                     feature.updateDefaultState(to: $0.value)
+                    self.featureStoreProvider.setAttributes(.init(state: .default, defaultValue: feature.defaultState), forKey: $0.key)
                 }
             }
             completion()

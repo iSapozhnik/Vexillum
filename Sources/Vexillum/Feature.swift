@@ -1,8 +1,14 @@
 import Foundation
+#if os(iOS)
 import UIKit
+public typealias Color = UIColor
+#else
+import AppKit
+public typealias Color = NSColor
+#endif
 
 /// Any of the states except `default` means that the feature has been overriden
-public enum FeatureState: Int {
+public enum FeatureState: Int, Codable {
     case `default`
     case on
     case off
@@ -55,14 +61,14 @@ public class Feature: NSObject, AnyFeature {
         }
     }
     
-    public var color: UIColor {
+    public var color: Color {
         switch (state, _defaultState) {
         case (.on, true): return .systemOrange
         case (.on, false): return .systemOrange
         case (.off, true): return .systemOrange
         case (.off, false): return .systemOrange
         case (.default, true): return .systemGreen
-        case (.default, false): return .systemGray3
+        case (.default, false): return .systemGray
         }
     }
     
@@ -87,5 +93,4 @@ public class Feature: NSObject, AnyFeature {
     func updateDefaultState(to newState: Bool) {
         _defaultState = newState
     }
-    
 }
