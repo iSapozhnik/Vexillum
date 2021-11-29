@@ -69,9 +69,7 @@ public class FeatureContainer {
     }
     
     subscript(dynamicMember member: String) -> Feature? {
-        queue.sync {
-            try? featureForKey(member)
-        }
+        try? featureForKey(member)
     }
     
     public subscript(key: FeatureKey) -> Bool {

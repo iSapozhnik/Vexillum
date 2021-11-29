@@ -58,7 +58,7 @@ final class FeatureTests: XCTestCase {
     func test_featureColorWhenDefaultOff() throws {
         let feature = Feature(key: .appKey, defaultState: false)
         
-        XCTAssertEqual(feature.color, .systemGray3)
+        XCTAssertEqual(feature.color, .systemGray)
     }
     
     func test_featureColorWhenDefaultOnAndOverridenOff() throws {
