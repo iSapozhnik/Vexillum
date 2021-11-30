@@ -32,10 +32,7 @@ public protocol AnyFeature: NSObjectProtocol {
     var enabled: Bool { get }
     var defaultState: Bool { get }
     var state: FeatureState { get set }
-}
-
-extension AnyFeature {
-    var hash: Int { return self.key.hashValue }
+    var requiresRestart: Bool { get }
 }
 
 typealias StateChange = (Feature) -> Void
@@ -44,6 +41,7 @@ public class Feature: NSObject, AnyFeature {
     public let key: String
     public let title: String
     public let featureDescription: String
+    public let requiresRestart: Bool
     
     public var enabled: Bool {
         switch state {
@@ -80,11 +78,13 @@ public class Feature: NSObject, AnyFeature {
         key: String,
         defaultState: Bool = false,
         title: String? = nil,
-        featureDescription: String = ""
+        featureDescription: String = "",
+        requiresRestart: Bool = false
     ) {
         self.key = key
         self.title = title ?? key
         self.featureDescription = featureDescription
+        self.requiresRestart = requiresRestart
         _defaultState = defaultState
         state = .default
     }
@@ -92,5 +92,11 @@ public class Feature: NSObject, AnyFeature {
     // Called by FeatureProvider when it gets data from remote feature flag service
     func updateDefaultState(to newState: Bool) {
         _defaultState = newState
+    }
+}
+
+extension Equatable where Self: AnyFeature {
+    static func ==(lhs: Self, rhs: AnyFeature) -> Bool {
+        lhs.key == rhs.key
     }
 }

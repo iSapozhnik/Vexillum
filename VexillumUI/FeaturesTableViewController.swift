@@ -24,7 +24,6 @@ final class FeaturesTableViewController: UITableViewController {
 
         super.init(style: UITableView.Style.plain)
         presenter.viewController = self
-
     }
 
     required public init?(coder aDecoder: NSCoder) {
@@ -43,6 +42,12 @@ final class FeaturesTableViewController: UITableViewController {
         tableView.estimatedRowHeight = UITableView.automaticDimension
         tableView.dataSource = presenter
         tableView.delegate = interactor
+    }
+}
+
+extension FeaturesTableViewController: SwitchCellDelegate {
+    func switchCell(_ cell: SwitchCell, wantsToggleFeature feature: AnyFeature, isDenied: (() -> Void)?) {
+        interactor.toggleFeature(feature, isDenied: isDenied)
     }
 }
 
