@@ -19,7 +19,7 @@ extension FeatureKey {
 class ViewController: ShakeController {
 
     private static let features = [
-        Feature(key: .showRating, defaultState: true),
+        Feature(key: .showRating, defaultState: true, requiresRestart: true),
         Feature(key: .backgroundColor, defaultState: false, title: "App background color"),
         Feature(key: .appFilter, defaultState: true, title: "App filters", featureDescription: "Enabling filter by applications."),
         Feature(key: .someOther, defaultState: true, title: "Some Other cool feature", featureDescription: "Some other cool feature which requires restarting the app."),
