@@ -16,7 +16,7 @@ extension FeatureKey {
     static let someOther = "sone_other"
 }
 
-class ViewController: UIViewController {
+class ViewController: ShakeController {
 
     private static let features = [
         Feature(key: .showRating, defaultState: true),
@@ -25,12 +25,12 @@ class ViewController: UIViewController {
         Feature(key: .someOther, defaultState: true, title: "Some Other cool feature", featureDescription: "Some other cool feature which requires restarting the app."),
     ]
     
-    private var featureContainer: FeatureContainer!
+    private var featureContainer: Vexillum!
 
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        featureContainer = FeatureContainer(features: Self.features, featureStoreProvider: FeatureStore.userDefaults)
+        featureContainer = Vexillum(features: Self.features, featureStoreProvider: FeatureStore.userDefaults)
     }
     
     override func viewDidLoad() {
@@ -52,5 +52,8 @@ class ViewController: UIViewController {
         let navController = FeaturesNavigationController(withFeatureContainer: featureContainer)
         present(navController, animated: true)
     }
+    
+    override func handleShakeGesture() {
+        showFeatureController()
+    }
 }
-

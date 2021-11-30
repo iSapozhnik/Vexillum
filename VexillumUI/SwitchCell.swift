@@ -46,7 +46,7 @@ final class SwitchCell: UITableViewCell, Reusable {
         $0.spacing = 4
     }
     
-    var feature: Vexillum.Feature? {
+    var feature: Feature? {
         didSet {
             updateUI(withFeature: feature)
         }
