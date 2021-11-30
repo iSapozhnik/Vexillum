@@ -3,7 +3,7 @@ import Foundation
 public typealias FeatureKey = String
 
 @dynamicMemberLookup
-public class FeatureContainer {
+public class Vexillum {
     public var allFeatures: [AnyFeature] { features.map { $0.value }.sorted(by: \.key) }
     
     private var features: [String: AnyFeature] = [:]

@@ -2,17 +2,17 @@ import XCTest
 @testable import Vexillum
 
 final class FeatureContainerTests: XCTestCase {
-    private var container: FeatureContainer!
+    private var container: Vexillum!
     
     override func setUp() {
         super.setUp()
         
-        container = FeatureContainer(featureStoreProvider: InMemoryFeatureStore())
+        container = Vexillum(featureStoreProvider: InMemoryFeatureStore())
     }
     
     func test_whenPassingThroughConstructor() throws {
         // Arrange
-        container = FeatureContainer(features: [
+        container = Vexillum(features: [
             Feature(key: .featureA), Feature(key: .featureB)
         ], featureStoreProvider: InMemoryFeatureStore())
         
