@@ -9,6 +9,10 @@ import Foundation
 import UIKit
 import Vexillum
 
+protocol SwitchCellDelegate: NSObjectProtocol {
+    func switchCell(_ cell: SwitchCell, wantsToggleFeature feature: AnyFeature, isDenied: (() -> Void)?)
+}
+
 final class SwitchCell: UITableViewCell, Reusable {
     private let nameLabel = withObject(UILabel()) {
         $0.setContentCompressionResistancePriority(.required, for: .vertical)
@@ -46,6 +50,7 @@ final class SwitchCell: UITableViewCell, Reusable {
         $0.spacing = 4
     }
     
+    weak var delegate: SwitchCellDelegate?
     var feature: Feature? {
         didSet {
             updateUI(withFeature: feature)
@@ -78,26 +83,21 @@ final class SwitchCell: UITableViewCell, Reusable {
     }
     
     @objc
-    func onSwitchChange(_ sender: Any) {
-        guard let feature = feature else {
-            return
-        }
+    func onSwitchChange(_ sender: UISwitch) {
+        guard let feature = feature else { return }
 
-        if feature.enabled {
-            feature.state = .off
-        } else {
-            feature.state = .on
+        delegate?.switchCell(self, wantsToggleFeature: feature) {
+            sender.setOn(!sender.isOn, animated: true)
         }
-        Haptic.toggle()
-        
-        updateUI(withFeature: feature)
     }
-    
     
     private func updateUI(withFeature feature: Feature?) {
         guard let feature = feature else { return }
 
         nameLabel.text = feature.title
+        if feature.requiresRestart {
+            nameLabel.text?.append("*")
+        }
         nameLabel.textColor = feature.color
         descriptionLabel.text = feature.featureDescription
         descriptionLabel.isHidden = feature.featureDescription.isEmpty

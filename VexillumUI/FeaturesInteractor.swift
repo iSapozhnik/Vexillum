@@ -9,6 +9,14 @@ final class FeaturesInteractor: NSObject {
     init(withPresenter presenter: FeaturesPresenter) {
         self.presenter = presenter
     }
+    
+    func toggleFeature(_ feature: AnyFeature, isDenied: (() -> Void)?) {
+        presenter.promptToRestart(for: feature, isAccepted: { [weak self] in
+            feature.state = feature.enabled ? .off : .on
+            Haptic.toggle()
+            self?.presenter.updateFeature(feature)
+        }, isDenied: isDenied)
+    }
 }
 
 extension FeaturesInteractor: UITableViewDelegate {
@@ -16,10 +24,12 @@ extension FeaturesInteractor: UITableViewDelegate {
         guard indexPath.row <= presenter.features.count,
             let feature = presenter.features[indexPath.row] as? Feature
             else { return }
-        
-        feature.state = feature.enabled ? .off : .on
-        presenter.updateFeature(tableView: tableView, indexPath: indexPath)
-        Haptic.toggle()
+        tableView.deselectRow(at: indexPath, animated: true)
+        presenter.promptToRestart(for: feature) { [weak self] in
+            feature.state = feature.enabled ? .off : .on
+            self?.presenter.updateFeature(withIndexPath: indexPath)
+            Haptic.toggle()
+        }
     }
     
     func tableView(_ tableView: UITableView,
@@ -43,24 +53,28 @@ extension FeaturesInteractor: UITableViewDelegate {
         return UISwipeActionsConfiguration(actions: [action])
     }
     
-    func swipeHandler(forFeature feature: AnyFeature,
+    private func swipeHandler(forFeature feature: AnyFeature,
                       state: FeatureState,
                       tableView: UITableView,
                       indexPath: IndexPath,
                       completion: (Bool) -> Void) {
 
         Haptic.success()
-        feature.state = state
         completion(true)
-        presenter.updateFeature(tableView: tableView, indexPath: indexPath)
+        presenter.promptToRestart(for: feature) { [weak self] in
+            feature.state = state
+            self?.presenter.updateFeature(withIndexPath: indexPath)
+        }
     }
 }
 
 extension FeaturesInteractor {
     func resetAllFeatures(_ sender: Any?) {
-        presenter.features.forEach {
-            $0.state = .default
+        presenter.promptToResetAllFeatures { [weak self] in
+            self?.presenter.features.forEach {
+                $0.state = .default
+            }
+            self?.presenter.reload()
         }
-        presenter.reload()
     }
 }
