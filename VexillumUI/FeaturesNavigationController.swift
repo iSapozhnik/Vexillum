@@ -10,7 +10,7 @@ import UIKit
 import Vexillum
 
 open class FeaturesNavigationController: UINavigationController {
-    public init(withFeatureContainer featureContainer: FeatureContainer) {
+    public init(withFeatureContainer featureContainer: Vexillum) {
         let featureFlagsController = FeaturesTableViewController(features: featureContainer.allFeatures)
         super.init(rootViewController: featureFlagsController)
     }
