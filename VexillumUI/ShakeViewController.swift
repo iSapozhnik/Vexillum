@@ -8,14 +8,19 @@
 import Foundation
 import UIKit
 
-open class ShakeController: UIViewController {
+public protocol FeatureTogglePresentable {
+    func presentFeatureToggle()
+}
+
+open class VexilleViewController: UIViewController {
     open override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
         guard motion == .motionShake else { return }
 
         handleShakeGesture()
     }
     
-    open func handleShakeGesture() {
-        fatalError("Shake gesture handler is not implemented")
+    func handleShakeGesture() {
+        guard self is FeatureTogglePresentable else { return }
+        (self as? FeatureTogglePresentable)?.presentFeatureToggle()
     }
 }

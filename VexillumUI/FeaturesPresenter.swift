@@ -6,10 +6,14 @@ final class FeaturesPresenter: NSObject {
     
     weak var viewController: FeaturesTableViewController?
     
-    let features: [AnyFeature]
+    let featureGroups: [FeatureGroup]
     
     init(withFeatures features: [AnyFeature]) {
-        self.features = features
+        self.featureGroups = [FeatureGroup(label: "Default group", features: features)]
+    }
+    
+    init(withFeatureGroups featureGroups: [FeatureGroup]) {
+        self.featureGroups = featureGroups
     }
     
     func promptToRestart(for feature: AnyFeature, isAccepted: @escaping () -> Void, isDenied: (() -> Void)? = nil) {
@@ -26,7 +30,7 @@ final class FeaturesPresenter: NSObject {
     func promptToResetAllFeatures(isAccepted: @escaping () -> Void) {
         guard let viewController = viewController else { return isAccepted() }
 
-        let restartNeeded = !(features.filter { $0.requiresRestart }.isEmpty)
+        let restartNeeded = !(featureGroups.flatMap { $0.features }.filter { $0.requiresRestart }.isEmpty)
         
         let message = "Are you sure you want reset all features to their default states?"
         let restartNeededMessage = "This action require a restart to take action"
@@ -41,6 +45,17 @@ final class FeaturesPresenter: NSObject {
         viewController.present(alert, animated: true, completion: nil)
     }
     
+    func updateFooterWithDate(_ date: Date) {
+        viewController?.footerView.updateState(to: .updating)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            DispatchQueue.main.async {
+                self.viewController?.refreshControl?.endRefreshing()
+                self.viewController?.footerView.updateState(to: .updatedAt(Date()))
+            }
+        }
+        
+    }
+    
     private func restartAdterDelay() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             exit(EXIT_SUCCESS )
@@ -49,13 +64,22 @@ final class FeaturesPresenter: NSObject {
 }
 
 extension FeaturesPresenter: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        featureGroups.count
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        featureGroups[section].label + " (\(featureGroups[section].features.count))"
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return features.count
+        featureGroups[section].features.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SwitchCell.reuseIdentifier, for: indexPath)
-        if let cell = cell as? SwitchCell, let feature = features[indexPath.row] as? Feature {
+        let featureGroup = featureGroups[indexPath.section]
+        if let cell = cell as? SwitchCell, let feature = featureGroup.features[indexPath.row] as? Feature {
             cell.feature = feature
             cell.delegate = viewController
         }
@@ -69,12 +93,15 @@ extension FeaturesPresenter {
     }
     
     func reload() {
-        viewController?.tableView?.reloadSections(IndexSet(integer: 0), with: .fade)
+        let indexPaths = (0..<featureGroups.count).map { section in
+            (0..<featureGroups[section].features.count).map { IndexPath(row: $0, section: section) }
+        }.flatMap { $0 }
+        viewController?.tableView?.reloadRows(at: indexPaths, with: .fade)
     }
     
-    func updateFeature(_ feature: AnyFeature) {
-        guard let index = features.firstIndex(where: { $0.key == feature.key }) else { return }
-        viewController?.tableView?.reloadRows(at: [IndexPath(row: index, section: 0)], with: .fade)
+    func updateFeature(_ feature: AnyFeature, forCell cell: SwitchCell) {
+        guard let indexPath = viewController?.tableView.indexPath(for: cell) else { return }
+        viewController?.tableView?.reloadRows(at: [indexPath], with: .fade)
     }
 }
 
