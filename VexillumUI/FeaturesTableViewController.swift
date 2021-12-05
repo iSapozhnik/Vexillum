@@ -64,6 +64,12 @@ public final class FeaturesTableViewController: UITableViewController {
     }
 }
 
+extension FeaturesTableViewController: SwitchCellDelegate {
+    func switchCell(_ cell: SwitchCell, wantsToggleFeature feature: AnyFeature, isDenied: (() -> Void)?) {
+        interactor.toggleFeature(feature, isDenied: isDenied)
+    }
+}
+
 extension FeaturesTableViewController {
     public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         interactor.tableView(tableView, didSelectRowAt: indexPath)
