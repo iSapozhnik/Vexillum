@@ -6,5 +6,4 @@ The vexillum (/vɛkˈsɪləm/; plural vexilla) was a flag-like object used as a 
 
 Vexillum for iOS is a In-app feature flagging management framework. [WIP]
 
-<img src="https://user-images.githubusercontent.com/1089384/143769225-5b296bc4-1e9a-45aa-ad11-e784770b2101.png" width="50%" height="50%">
-
+<img src="https://user-images.githubusercontent.com/1089384/144769154-7b74b94c-b0a4-41f2-9411-0528373c1aa8.png" width="50%" height="50%">
