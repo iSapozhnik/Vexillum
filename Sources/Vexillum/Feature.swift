@@ -7,7 +7,7 @@ import AppKit
 public typealias Color = NSColor
 #endif
 
-/// Any of the states except `default` means that the feature has been overriden
+/// Any of the states except `default` means that the feature has been overridden
 public enum FeatureState: Int, Codable {
     case `default`
     case on
@@ -15,7 +15,7 @@ public enum FeatureState: Int, Codable {
 }
 
 extension FeatureState: CustomDebugStringConvertible {
-    public var description: String {
+    private var description: String {
         switch self {
         case .on: return "On"
         case .off: return "Off"
@@ -33,6 +33,7 @@ public protocol AnyFeature: NSObjectProtocol {
     var defaultState: Bool { get }
     var state: FeatureState { get set }
     var requiresRestart: Bool { get }
+    var isLocal: Bool { get }
 }
 
 typealias StateChange = (Feature) -> Void
@@ -42,6 +43,7 @@ public class Feature: NSObject, AnyFeature {
     public let title: String
     public let featureDescription: String
     public let requiresRestart: Bool
+    public let isLocal: Bool
     
     public var enabled: Bool {
         switch state {
@@ -59,12 +61,20 @@ public class Feature: NSObject, AnyFeature {
         }
     }
     
+    public var stateDescription: String {
+        switch state {
+        case .default: return _defaultState ? "On" : "Off"
+        case .on: return "On"
+        case .off: return "Off"
+        }
+    }
+    
     public var color: Color {
         switch (state, _defaultState) {
-        case (.on, true): return .systemOrange
+        case (.on, true): return .systemGreen
         case (.on, false): return .systemOrange
         case (.off, true): return .systemOrange
-        case (.off, false): return .systemOrange
+        case (.off, false): return .systemGray
         case (.default, true): return .systemGreen
         case (.default, false): return .systemGray
         }
@@ -79,12 +89,14 @@ public class Feature: NSObject, AnyFeature {
         defaultState: Bool = false,
         title: String? = nil,
         featureDescription: String = "",
-        requiresRestart: Bool = false
+        requiresRestart: Bool = false,
+        isLocal: Bool = true
     ) {
         self.key = key
         self.title = title ?? key
         self.featureDescription = featureDescription
         self.requiresRestart = requiresRestart
+        self.isLocal = isLocal
         _defaultState = defaultState
         state = .default
     }
