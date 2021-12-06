@@ -61,41 +61,6 @@ final class FeaturesPresenter: NSObject {
             exit(EXIT_SUCCESS )
         }
     }
-    
-    func promptToRestart(for feature: AnyFeature, isAccepted: @escaping () -> Void, isDenied: (() -> Void)? = nil) {
-        guard let viewController = viewController, feature.requiresRestart else { return isAccepted() }
-
-        let message = "The app needs to be restarted in order to apply changes to the feature \(feature.title)."
-        let alert = UIAlertController(title: "Restart required", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in isDenied?() })
-        alert.addAction(UIAlertAction(title: "Restart later", style: .default) { _ in isAccepted() })
-        alert.addAction(UIAlertAction(title: "Terminate", style: .destructive) { _ in isAccepted(); self.restartAdterDelay() })
-        viewController.present(alert, animated: true, completion: nil)
-    }
-    
-    func promptToResetAllFeatures(isAccepted: @escaping () -> Void) {
-        guard let viewController = viewController else { return isAccepted() }
-
-        let restartNeeded = !(features.filter { $0.requiresRestart }.isEmpty)
-        
-        let message = "Are you sure you want reset all features to their default states?"
-        let restartNeededMessage = "This action require a restart to take action"
-        var messageComponents = [message]
-        if restartNeeded {
-            messageComponents.append(restartNeededMessage)
-        }
-        let alert = UIAlertController(title: "Reset all features", message: messageComponents.joined(separator: " "), preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        alert.addAction(UIAlertAction(title: "Restart later", style: .default) { _ in isAccepted() })
-        alert.addAction(UIAlertAction(title: "Yes and Terminate", style: .destructive) { _ in isAccepted(); self.restartAdterDelay() })
-        viewController.present(alert, animated: true, completion: nil)
-    }
-    
-    private func restartAdterDelay() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            exit(EXIT_SUCCESS )
-        }
-    }
 }
 
 extension FeaturesPresenter: UITableViewDataSource {
