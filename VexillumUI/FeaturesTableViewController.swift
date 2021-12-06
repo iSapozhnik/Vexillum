@@ -66,7 +66,7 @@ public final class FeaturesTableViewController: UITableViewController {
 
 extension FeaturesTableViewController: SwitchCellDelegate {
     func switchCell(_ cell: SwitchCell, wantsToggleFeature feature: AnyFeature, isDenied: (() -> Void)?) {
-        interactor.toggleFeature(feature, isDenied: isDenied)
+        interactor.toggleFeature(feature, forCell: cell, isDenied: isDenied)
     }
 }
 
@@ -79,11 +79,5 @@ extension FeaturesTableViewController {
                         trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath
         ) -> UISwipeActionsConfiguration? {
         interactor.tableView(tableView, trailingSwipeActionsConfigurationForRowAt: indexPath)
-    }
-}
-
-extension FeaturesTableViewController: SwitchCellDelegate {
-    func switchCell(_ cell: SwitchCell, wantsToggleFeature feature: AnyFeature, isDenied: (() -> Void)?) {
-        interactor.toggleFeature(feature, forCell: cell, isDenied: isDenied)
     }
 }
